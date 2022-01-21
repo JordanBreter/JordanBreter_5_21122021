@@ -26,7 +26,7 @@ function displayProduct(prod) {
   let divParamQty = document.createElement("div");
   divParamQty.setAttribute("class", "cart__item__content__settings__quantity");
   let paraQty = document.createElement("p");
-  paraQty.textContent = "Qté :" + prod.qty;
+  paraQty.textContent = "Qté : " + prod.qty;
   let input = document.createElement("input");
   input.setAttribute("type", "number");
   input.setAttribute("class", "itemQuantity");
@@ -36,9 +36,12 @@ function displayProduct(prod) {
   input.setAttribute("value", "42")
   divParamQty.append(paraQty, input);
   let divDelete = document.createElement("div");
-  divDelete.setAttribute("class","cart__item__content__settings__delete");
+  divDelete.setAttribute("class", "cart__item__content__settings__delete");
   let paraDelete = document.createElement("p");
-  paraDelete.setAttribute("class","deleteItem");
+  paraDelete.setAttribute("class", "deleteItem");
+  article.append(divImage,titre,para,paraPrice,divParamQty);
+  let section = document.getElementById("cart__items");
+  section.append(article);
 
 }
 function init() {
@@ -51,16 +54,15 @@ function init() {
 }
 function displayProd(articles) {
   articles.map(product => {
-    fetch('http://localhost:3000/api/products/' + product._id)
-      .then(function (res) {
-        res.json();
-      })
+    fetch('http://localhost:3000/api/products/' + product.id)
+      .then((res) => res.json)
       .then((prod) => {
         prod.qty = product.qty;
         prod.color = product.color;
+        prod.id = product.id;
         displayProduct(prod);
         //calcul()
       });
   });
 }
-//init();
+init();
