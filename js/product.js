@@ -62,6 +62,7 @@ function displayProduct(article) {
     document.getElementById('addToCart').addEventListener('click', () => {
 
         addToCart(article._id);
+        alert("Produit ajouté");
     });
 }
 function addToCart(choise) {
