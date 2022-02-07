@@ -81,65 +81,114 @@ function deleteProd(e) {
   let noToDelete = [];
   basket.map((prod) => {
     if (id !== prod.id || color !== prod.color) {
-      noToDelete.push(noToDelete);
+      noToDelete.push(prod);
     }
 
   });
 
-  function updateQty(event) {
-    let priceInObj = event.target.unitPrice;
-    let colorInObj = event.target.colorSelected;
-    let val = event.target.value;
-    console.log(priceInObj + " " + colorInObj, "In object");
+  localStorage.setItem("basket", JSON.stringify(noToDelete));
+  elem.remove();
+  if (!noToDelete.length) {
+    alert("Votre panier est vide !");
+  }
+  calcul();
+}
+function updateQty(event) {
+  let priceInObj = event.target.unitPrice;
+  let colorInObj = event.target.colorSelected;
+  let val = event.target.value;
+  console.log(priceInObj + " " + colorInObj, "In object");
 
-    let price = event.target.closest("article").getAttribute("data-price");
-    let color = event.target.closest("article").getAttribute("data-color");
-    console.log(price + " " + color + " " + val, "In Article");
+  let price = event.target.closest("article").getAttribute("data-price");
+  let color = event.target.closest("article").getAttribute("data-color");
+  console.log(price + " " + color + " " + val, "In Article");
 
-    if (0 >= parseInt(val)) {
-      alert("0 n'est pas une quantité");
-      return false;
+  if (0 >= parseInt(val)) {
+    alert("0 n'est pas une quantité");
+    return false;
+  }
+
+  let id = event.target.closest("article").getAttribute("data-id");
+
+  let basket = getStorage();
+  basket.map((prod) => {
+    if (id === prod.id && color === prod.color) {
+      prod.qty = val;
     }
+  });
 
-    let id = event.target.closest("article").getAttribute("data-id");
+  localStorage.setItem("basket", JSON.stringify(basket));
+  calcul();
+}
 
-    let basket = getStorage();
-    basket.map((prod) => {
-      if (id === prod.id && color === prod.color) {
-        prod.qty = val;
-      }
-    });
+function getStorage() {
+  return JSON.parse(localStorage.getItem("basket"));
+}
 
-    localStorage.setItem("basket", JSON.stringify(basket));
+function init() {
+  let basket = getStorage();
+  if (basket == null || basket == "") {
+    alert('Panier vide');
+    return false;
   }
+  displayProd(basket);
+}
 
-  function getStorage() {
-    return JSON.parse(localStorage.getItem("basket"));
-  }
+function calcul() {
+  let totalQuantity = document.getElementById("totalQuantity");
+  let totalPriceElem = document.getElementById("totalPrice");
 
-  function init() {
-    let basket = getStorage();
-    if (basket == null || basket == "") {
-      alert('Panier vide');
-      return false;
-    }
-    displayProd(basket);
-  }
-  
-  function calcul() {
+  let inputs = document.getElementsByClassName("itemQuantity");
 
+  let totalQty = 0;
+  let totalPrice = 0;
+
+  for (let elem of inputs) {
+    let qty = elem.value; // toujours renvoyer une string
+    totalQty += parseInt(qty);
+
+    let totalProd = parseInt(qty) * parseInt(elem.unitPrice);
+    totalPrice += totalProd;
+    console.log(elem.value);
   }
-  function displayProd(articles) {
-    articles.map(product => {
-      fetch('http://localhost:3000/api/products/' + product.id)
-        .then((res) => res.json())
-        .then((prod) => {
-          prod.qty = product.qty;
-          prod.color = product.color;
-          prod.id = product.id;
-          displayProduct(prod);
-          //calcul()
-        });
-    });
-  }
+  totalQuantity.textContent = totalQty;
+  totalPriceElem.textContent = totalPrice;
+}
+
+function displayProd(articles) {
+  articles.map(product => {
+    fetch('http://localhost:3000/api/products/' + product.id)
+      .then((res) => res.json())
+      .then((prod) => {
+        prod.qty = product.qty;
+        prod.color = product.color;
+        prod.id = product.id;
+        displayProduct(prod);
+        calcul()
+      });
+  });
+}
+init();
+
+function getForm() {
+  /*
+    . Ajout des expressions régulières (RegExp)
+    . Validation de prénom
+    . let valideName = ('^[a-zA-Z]+ [a-zA-Z]$')
+    . Le prénom comporte des lettres (Majuscules/Minuscules) et/ou un tiret
+    . Validation du nom
+    . let valideFirstName = new RegExp ('^[a-zA-Z]+ [a-zA-Z]$')
+    . Le nom comporte des lettres (Majuscules/Minuscules) et/ou un tiret
+    . Validation de l'adresse
+    . L'adresse doit comporter des lettres, des chiffres et quelques caractères spéciaux
+    . Validation de la ville
+    . let valideAdress = new RegExp ('[0-9]+ [a-zA-Z]+ [0-9]+ [a-zA-Z]$')
+    . La ville doit comporter des lettres, (Majuscules/Minuscules) et/ou un tiret
+    . Validation de l'Email
+      let valideEmail = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$','g')
+    . L'email doit en première partie une série de caractères, et/ou chiffres suivis d'un '@', suivis d'une chaine de caractères, suivis d'un '.' et pour finir d'une suite de caractère de maximum 3 lettres
+    . Intégrer un message d'erreur au cas où les champs ne sont pas bien remplis
+    . Intégrer un message de validation si tous les champs sont bien remplis
+  */
+
 }
