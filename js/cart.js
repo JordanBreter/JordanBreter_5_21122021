@@ -132,6 +132,7 @@ function init() {
     return false;
   }
   displayProd(basket);
+  initInputForm();
 }
 
 function calcul() {
@@ -170,6 +171,56 @@ function displayProd(articles) {
 }
 init();
 
+function initInputForm() {
+  let inputsForm = document.forms[0];
+
+  inputsForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    getForm(event);
+    return false;
+  });
+}
+
+function testInput(input) {
+  let inputName = input.name;
+  let inputValue = input.value;
+
+  let retour = "";
+
+  switch (inputName) {
+    case "firstName":
+    case "lastName":
+    case "city":
+      if (regTests(inputValue)) {
+        document.getElementById(inputName + "ErrorMsg").textContent = "";
+        retour = inputValue;
+      } else {
+        document.getElementById(inputName + "ErrorMsg").textContent = "Champs incorrect";
+        retour = false;
+      }
+      break;
+    case "adresse":
+      if (regTestAdress(inputValue)) {
+        document.getElementById(inputName + "ErrorMsg").textContent = "";
+        retour = inputValue;
+      } else {
+        document.getElementById(inputName + "ErrorMsg").textContent = "Champs incorrect";
+        retour = false;
+      }
+      break;
+    case "email":
+      if (regTestEmail(inputValue)) {
+        document.getElementById(inputName + "ErrorMsg").textContent = "";
+        retour = inputValue;
+      } else {
+        document.getElementById(inputName + "ErrorMsg").textContent = "Champs incorrect";
+        retour = false;
+      }
+      break;
+
+  }
+  return retour;
+}
 function getForm() {
   /*
     . Ajout des expressions régulières (RegExp)
