@@ -126,13 +126,21 @@ function getStorage() {
 }
 
 function init() {
-  let basket = getStorage();
-  if (basket == null || basket == "") {
-    alert('Panier vide');
-    return false;
+
+  let str = window.location.href;
+  let url = new URL(str);
+  let orderId = url.searchParams.get("orderId");
+  if (orderId) {
+
+  } else {
+    let basket = getStorage();
+    if (basket == null || basket == "") {
+      alert('Panier vide');
+      return false;
+    }
+    displayProd(basket);
+    initInputForm();
   }
-  displayProd(basket);
-  initInputForm();
 }
 
 function calcul() {
@@ -181,6 +189,35 @@ function initInputForm() {
   });
 }
 
+function regTests(inputValue) {
+  let testSpecialChars = /[$!@#%&*().?":{}|<>]/;
+  let testNumber = /[0-9]/;
+  if (testSpecialChars.test(inputValue) || testNumber.test(inputValue)) {
+    return false
+  } else {
+    return true
+  }
+}
+
+function regTestAdress(inputValue) {
+  let testSpecialChars = /[$!@#%&*().?":{}|<>]/;
+  if (testSpecialChars.test(inputValue)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function regTestEmail(inputValue) {
+  let testMail = /[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,3}$/;
+  if (testMail.test(inputValue)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
 function testInput(input) {
   let inputName = input.name;
   let inputValue = input.value;
@@ -221,6 +258,8 @@ function testInput(input) {
   }
   return retour;
 }
+
+
 function getForm() {
   /*
     . Ajout des expressions régulières (RegExp)
@@ -241,5 +280,62 @@ function getForm() {
     . Intégrer un message d'erreur au cas où les champs ne sont pas bien remplis
     . Intégrer un message de validation si tous les champs sont bien remplis
   */
+  let inputsForm = document.forms[0];
 
+  let contact = {};
+
+  let error = 0;
+
+  for (input of inputsForm) {
+    let type = input.type;
+    if ("submit" != type) {
+      console.log(input.name);
+      let prop = testInput(input);
+      if (prop) {
+        contact[input.name] = prop;
+      } else {
+        error++;
+      }
+    }
+  }
+
+  if (error) {
+    return false;
+  }
+
+  let cart = getStorage();
+  let products = [];
+  cart.map((prod) => {
+    products.push(prod.id);
+  });
+
+  if (products.length) {
+    return false;
+  }
+
+  let data = {
+    contact,
+    products
+  };
+
+  fetch("http://localhost:3000/api" + "/order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((resp) => {
+      localStorage.clear();
+      let urlcourante = document.location.href;
+      urlcourante = urlcourante.replace("cart.html", "");
+      let confirm = "confirmation.html?orderId=" + resp.orderId;
+      let url = urlcourante + confirm;
+      windox.location = url;
+    })
+    .catch((error) => {
+      logDebug("Error:", error);
+    });
 }
+

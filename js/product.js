@@ -1,7 +1,19 @@
+/*init();
+function init() {
+    let str = window.location.href;
+    let url = new URL(str);
+    let idProduct = url.searchParams.get("id");
+    if (idProduct) {
+        getArticle(idProduct);
+    } else {
+        alert("erreur");
+    }
+}*/
 let str = window.location.href;
 let url = new URL(str);
 let idProduct = url.searchParams.get("id");
 console.log(idProduct);
+
 getArticle();
 function getArticle() {
     fetch("http://localhost:3000/api/products/" + idProduct)
