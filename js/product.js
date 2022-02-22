@@ -1,4 +1,4 @@
-/*init();
+init();
 function init() {
     let str = window.location.href;
     let url = new URL(str);
@@ -8,14 +8,9 @@ function init() {
     } else {
         alert("erreur");
     }
-}*/
-let str = window.location.href;
-let url = new URL(str);
-let idProduct = url.searchParams.get("id");
-console.log(idProduct);
+}
 
-getArticle();
-function getArticle() {
+function getArticle(idProduct) {
     fetch("http://localhost:3000/api/products/" + idProduct)
         .then(function (res) {
             if (res.ok) {

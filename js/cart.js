@@ -261,25 +261,7 @@ function testInput(input) {
 
 
 function getForm() {
-  /*
-    . Ajout des expressions régulières (RegExp)
-    . Validation de prénom
-    . let valideName = ('^[a-zA-Z]+ [a-zA-Z]$')
-    . Le prénom comporte des lettres (Majuscules/Minuscules) et/ou un tiret
-    . Validation du nom
-    . let valideFirstName = new RegExp ('^[a-zA-Z]+ [a-zA-Z]$')
-    . Le nom comporte des lettres (Majuscules/Minuscules) et/ou un tiret
-    . Validation de l'adresse
-    . L'adresse doit comporter des lettres, des chiffres et quelques caractères spéciaux
-    . Validation de la ville
-    . let valideAdress = new RegExp ('[0-9]+ [a-zA-Z]+ [0-9]+ [a-zA-Z]$')
-    . La ville doit comporter des lettres, (Majuscules/Minuscules) et/ou un tiret
-    . Validation de l'Email
-      let valideEmail = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$','g')
-    . L'email doit en première partie une série de caractères, et/ou chiffres suivis d'un '@', suivis d'une chaine de caractères, suivis d'un '.' et pour finir d'une suite de caractère de maximum 3 lettres
-    . Intégrer un message d'erreur au cas où les champs ne sont pas bien remplis
-    . Intégrer un message de validation si tous les champs sont bien remplis
-  */
+
   let inputsForm = document.forms[0];
 
   let contact = {};
@@ -332,10 +314,11 @@ function getForm() {
       urlcourante = urlcourante.replace("cart.html", "");
       let confirm = "confirmation.html?orderId=" + resp.orderId;
       let url = urlcourante + confirm;
-      windox.location = url;
+      window.location = url;
     })
     .catch((error) => {
       logDebug("Error:", error);
     });
+  getForm();
 }
 
