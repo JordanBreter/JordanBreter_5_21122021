@@ -1,4 +1,6 @@
-init();
+window.addEventListener("DOMContentLoaded", (event) => {
+    init();
+});
 function init() {
     let str = window.location.href;
     let url = new URL(str);

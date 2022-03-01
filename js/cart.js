@@ -1,3 +1,13 @@
+/*
+  * Fonction qui affiche le produit dans le panier
+  * insertion de l'élément article
+  * insertion de l'élément img qui contien l'image
+  * insertion des éléments div
+  * insertion de l'élément p
+  * insertion des éléments inputs
+  * créer un evenement pour modifier la quantité au panier
+  * créer un evenement pour supprimer l'article au panier
+*/
 function displayProduct(prod) {
   let article = document.createElement("article");
   article.setAttribute("class", "cart__item");
@@ -70,7 +80,11 @@ function displayProduct(prod) {
   section.append(article);
 
 }
-
+/*
+  * fonction qui permet de supprimer le panier dans le local storage
+  * permet d'afficher un message quand le panier est vide
+  * permet de différencier les mêmes produits qui n'ont pas la même couleur lors de la suppression
+*/
 function deleteProd(e) {
   let elem = e.target.closest("article");
 
@@ -93,6 +107,10 @@ function deleteProd(e) {
   }
   calcul();
 }
+/*
+  * permet de modifier le pix et la quiantité total du panier
+  * ajout d'une alert si quantité modifié "0"
+*/
 function updateQty(event) {
   let priceInObj = event.target.unitPrice;
   let colorInObj = event.target.colorSelected;
@@ -120,18 +138,21 @@ function updateQty(event) {
   localStorage.setItem("basket", JSON.stringify(basket));
   calcul();
 }
-
+// initialisation du local storage
 function getStorage() {
   return JSON.parse(localStorage.getItem("basket"));
 }
-
+/*
+  * affiche les produits dans le panier
+  * affiche les produits dans le local storage
+  * ajoute le numéro de la commande dans la page confirmation
+*/
 function init() {
-
   let str = window.location.href;
   let url = new URL(str);
   let orderId = url.searchParams.get("orderId");
   if (orderId) {
-
+    document.getElementById("orderId").textContent = orderId;
   } else {
     let basket = getStorage();
     if (basket == null || basket == "") {
@@ -142,7 +163,10 @@ function init() {
     initInputForm();
   }
 }
-
+/*
+  * calcul le nombre de produit au panier
+  * calcul le montant total du panier
+*/
 function calcul() {
   let totalQuantity = document.getElementById("totalQuantity");
   let totalPriceElem = document.getElementById("totalPrice");
@@ -163,7 +187,9 @@ function calcul() {
   totalQuantity.textContent = totalQty;
   totalPriceElem.textContent = totalPrice;
 }
-
+/*
+  * appel à l'API
+*/
 function displayProd(articles) {
   articles.map(product => {
     fetch('http://localhost:3000/api/products/' + product.id)
@@ -177,8 +203,16 @@ function displayProd(articles) {
       });
   });
 }
-init();
-
+window.addEventListener("DOMContentLoaded", (event) => {
+  init();
+});
+//////////////////////////******************************//////////////////////////
+ /*
+  * fonctions du formulaire
+  * écoute de l'événement créé sur le bouton commander
+  * création de Regexp pour le nom, prénom, adresse, ville et mail
+  * vérification des champs du formulaire
+ */
 function initInputForm() {
   let inputsForm = document.forms[0];
 
@@ -236,7 +270,7 @@ function testInput(input) {
         retour = false;
       }
       break;
-    case "adresse":
+    case "address":
       if (regTestAdress(inputValue)) {
         document.getElementById(inputName + "ErrorMsg").textContent = "";
         retour = inputValue;
@@ -258,8 +292,12 @@ function testInput(input) {
   }
   return retour;
 }
+//////////////////////////******************************//////////////////////////
 
-
+/*
+  * envoi du formulaire au local storage
+  * dirige vers la page confirmation avec le numéro de la commande
+*/
 function getForm() {
 
   let inputsForm = document.forms[0];
@@ -291,7 +329,7 @@ function getForm() {
     products.push(prod.id);
   });
 
-  if (products.length) {
+  if (!products.length) {
     return false;
   }
 
@@ -300,7 +338,7 @@ function getForm() {
     products
   };
 
-  fetch("http://localhost:3000/api" + "/order", {
+  fetch("http://localhost:3000/api/products" + "/order", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -319,6 +357,5 @@ function getForm() {
     .catch((error) => {
       logDebug("Error:", error);
     });
-  getForm();
 }
 
