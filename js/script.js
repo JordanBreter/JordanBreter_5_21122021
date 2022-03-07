@@ -16,7 +16,15 @@ function init() {
       alert(err);
     });
 }
-
+/**
+ * Fonction qui affiche le produit dans le panier
+ * argument prod est un objet
+ * insertion de l'élément "a"
+ * insertion de l'élément "article"
+ * insertion de l'élément "img"
+ * insertion de l'élément "h3"
+ * insertion de l'élément "p"
+ */
 function displayProduct(prod) {
   console.log(prod);
   let link = document.createElement("a");

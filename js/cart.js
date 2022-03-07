@@ -1,13 +1,15 @@
-/*
-  * Fonction qui affiche le produit dans le panier
-  * insertion de l'élément article
-  * insertion de l'élément img qui contien l'image
-  * insertion des éléments div
-  * insertion de l'élément p
-  * insertion des éléments inputs
-  * créer un evenement pour modifier la quantité au panier
-  * créer un evenement pour supprimer l'article au panier
-*/
+/**
+ * Fonction qui affiche le produit dans le panier
+ * argument prod est un objet {_id: "...", price:..., color:"..."}
+ * insertion de l'élément article
+ * insertion de l'élément img qui contien l'image
+ * insertion des éléments div
+ * insertion de l'élément p
+ * insertion des éléments inputs
+ * créer un evenement pour modifier la quantité au panier
+ * créer un evenement pour supprimer l'article au panier
+ */
+
 function displayProduct(prod) {
   let article = document.createElement("article");
   article.setAttribute("class", "cart__item");
@@ -80,10 +82,11 @@ function displayProduct(prod) {
   section.append(article);
 
 }
-/*
-  * fonction qui permet de supprimer le panier dans le local storage
-  * permet d'afficher un message quand le panier est vide
-  * permet de différencier les mêmes produits qui n'ont pas la même couleur lors de la suppression
+/**
+ * fonction qui permet de supprimer le panier dans le local storage
+ * argument e
+ * permet d'afficher un message quand le panier est vide
+ * permet de différencier les mêmes produits qui n'ont pas la même couleur lors de la suppression
 */
 function deleteProd(e) {
   let elem = e.target.closest("article");
@@ -107,10 +110,12 @@ function deleteProd(e) {
   }
   calcul();
 }
-/*
-  * permet de modifier le pix et la quiantité total du panier
-  * ajout d'une alert si quantité modifié "0"
-*/
+/**
+ * permet de modifier le pix et la quiantité total du panier
+ * argument event
+ * ajout d'une alert si quantité modifié "0"
+ */
+
 function updateQty(event) {
   let priceInObj = event.target.unitPrice;
   let colorInObj = event.target.colorSelected;
@@ -138,14 +143,19 @@ function updateQty(event) {
   localStorage.setItem("basket", JSON.stringify(basket));
   calcul();
 }
-// initialisation du local storage
+// récupération du local storage
 function getStorage() {
   return JSON.parse(localStorage.getItem("basket"));
 }
-/*
-  * affiche les produits dans le panier
-  * affiche les produits dans le local storage
-  * ajoute le numéro de la commande dans la page confirmation
+/**
+ * fonction d'aiguillage
+ * première fonction appelé dans cart.js
+ * permet de nous aiguiller soit dans la page panier soit sur la page confirmation
+ * si variable orderID dans l'url alors la page confirmation est chargée
+ * si non, affiche les produits dans la page panier
+ * recupération du localstorage
+ * affiche les produits
+ * initialise le formulaire
 */
 function init() {
   let str = window.location.href;
@@ -163,9 +173,9 @@ function init() {
     initInputForm();
   }
 }
-/*
-  * calcul le nombre de produit au panier
-  * calcul le montant total du panier
+/**
+ * calcul le nombre de produit au panier
+ * calcul le montant total du panier
 */
 function calcul() {
   let totalQuantity = document.getElementById("totalQuantity");
@@ -187,8 +197,8 @@ function calcul() {
   totalQuantity.textContent = totalQty;
   totalPriceElem.textContent = totalPrice;
 }
-/*
-  * appel à l'API
+/**
+ * appel à l'API
 */
 function displayProd(articles) {
   articles.map(product => {
@@ -207,12 +217,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
   init();
 });
 //////////////////////////******************************//////////////////////////
- /*
+ /**
   * fonctions du formulaire
   * écoute de l'événement créé sur le bouton commander
   * création de Regexp pour le nom, prénom, adresse, ville et mail
   * vérification des champs du formulaire
- */
+  */
 function initInputForm() {
   let inputsForm = document.forms[0];
 
@@ -222,7 +232,7 @@ function initInputForm() {
     return false;
   });
 }
-
+//testable
 function regTests(inputValue) {
   let testSpecialChars = /[$!@#%&*().?":{}|<>]/;
   let testNumber = /[0-9]/;
@@ -232,7 +242,7 @@ function regTests(inputValue) {
     return true
   }
 }
-
+//testable
 function regTestAdress(inputValue) {
   let testSpecialChars = /[$!@#%&*().?":{}|<>]/;
   if (testSpecialChars.test(inputValue)) {
@@ -241,7 +251,7 @@ function regTestAdress(inputValue) {
     return true;
   }
 }
-
+//testable
 function regTestEmail(inputValue) {
   let testMail = /[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,3}$/;
   if (testMail.test(inputValue)) {
@@ -294,10 +304,13 @@ function testInput(input) {
 }
 //////////////////////////******************************//////////////////////////
 
-/*
-  * envoi du formulaire au local storage
-  * dirige vers la page confirmation avec le numéro de la commande
-*/
+/**
+ * envoi du formulaire au local storage
+ * recupération des valeurs des champs du formulaire pour les tester
+ * si champs valide on rempli l'objet contact
+ * si non valide affiche une erreur
+ * dirige vers la page confirmation avec le numéro de la commande
+*/ 
 function getForm() {
 
   let inputsForm = document.forms[0];

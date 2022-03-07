@@ -26,7 +26,13 @@ function getArticle(idProduct) {
             alert(err)("Erreur");
         })
 }
-
+/**
+ * fonction (testable) qui affiche les produits sur la page
+ * argument article qui est un objet
+ * insertion de l'élément "img"
+ * ajout de l'événement pour ajouter le produit au panier
+ * ajout d'un alert lors de l'ajout au panier
+ */
 function displayProduct(article) {
     let image = document.createElement('img');
     image.setAttribute('src', article.imageUrl);
@@ -74,6 +80,7 @@ function displayProduct(article) {
         alert("Produit ajouté");
     });
 }
+
 function addToCart(choise) {
     let color = document.getElementById('colors').value;
     if (color === '') {
