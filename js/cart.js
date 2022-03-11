@@ -54,6 +54,7 @@ function displayProduct(prod) {
   input.value = prod.qty;
   input.colorSelected = prod.color;
   input.unitPrice = prod.price;
+  input.oldQty = prod.qty;
   divParamQty.append(paraQty, input);
 
   input.addEventListener("change", (event) => (
@@ -126,10 +127,12 @@ function updateQty(event) {
   let color = event.target.closest("article").getAttribute("data-color");
   console.log(price + " " + color + " " + val, "In Article");
 
-  if (0 >= parseInt(val)) {
+  if (0 >= parseInt(val) || !(val)) {
     alert("0 n'est pas une quantité");
+    event.target.value = event.target.oldQty;
     return false;
   }
+  event.target.oldQty = event.target.value;
 
   let id = event.target.closest("article").getAttribute("data-id");
 
@@ -217,12 +220,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
   init();
 });
 //////////////////////////******************************//////////////////////////
- /**
-  * fonctions du formulaire
-  * écoute de l'événement créé sur le bouton commander
-  * création de Regexp pour le nom, prénom, adresse, ville et mail
-  * vérification des champs du formulaire
-  */
+/**
+ * fonctions du formulaire
+ * écoute de l'événement créé sur le bouton commander
+ * création de Regexp pour le nom, prénom, adresse, ville et mail
+ * vérification des champs du formulaire
+ */
 function initInputForm() {
   let inputsForm = document.forms[0];
 
@@ -310,7 +313,7 @@ function testInput(input) {
  * si champs valide on rempli l'objet contact
  * si non valide affiche une erreur
  * dirige vers la page confirmation avec le numéro de la commande
-*/ 
+*/
 function getForm() {
 
   let inputsForm = document.forms[0];
